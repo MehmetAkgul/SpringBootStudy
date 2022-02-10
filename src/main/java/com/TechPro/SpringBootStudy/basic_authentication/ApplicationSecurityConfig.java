@@ -27,6 +27,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeHttpRequests()//Requestler için yetki sorgula
                 .antMatchers("/", "/index", "/css/*", "/js/*").permitAll()
                 // antMatchers() method parametresindeki url'lere izin verir
