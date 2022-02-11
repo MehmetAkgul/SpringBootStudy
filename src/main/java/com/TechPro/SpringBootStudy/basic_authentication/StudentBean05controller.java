@@ -3,18 +3,20 @@ package com.TechPro.SpringBootStudy.basic_authentication;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
 public class StudentBean05controller {
     private StudenBean05Service stdSrvc;//service layer' ulaşmak için obj create edildi
-    public StudentBean05controller(StudenBean05Service stdSrvc){
+
+    public StudentBean05controller(StudenBean05Service stdSrvc) {
         this.stdSrvc = stdSrvc;
     }
 
     //bu method id ile ogrc returnn eden service methodu call edecek
     @GetMapping(path = "/selectStudentById/{id}")
-    public StudentBean05 selectStudentById(@PathVariable Long id){
+    public StudentBean05 selectStudentById(@PathVariable Long id) {
 
         return stdSrvc.selectStudentById(id);
     }
@@ -25,8 +27,25 @@ public class StudentBean05controller {
     }
 
     @PutMapping(path = "/updateFullyStudentById/{id}")
-    public StudentBean05 updateFullyStudentById(@PathVariable Long id,@RequestBody StudentBean05 newStd){
-        return stdSrvc.updateFullyStudentById(id,newStd);
+    public StudentBean05 updateFullyStudentById(@PathVariable Long id, @RequestBody StudentBean05 newStd) {
+        return stdSrvc.updateFullyStudentById(id, newStd);
+    }
+
+
+    @DeleteMapping(path = "/deleteStudentById/{id}")
+    public String deleteStudentById(@PathVariable Long id) {
+        return stdSrvc.deletStudentById(id);
+    }
+
+
+    @PatchMapping(path = "/updatePatchStudentById/{id}")
+    public StudentBean05 updatePatchStudentById(@PathVariable Long id, @RequestBody StudentBean05 newStd) {
+        return stdSrvc.updatePatchStudentById(id, newStd);
+    }
+
+    @PostMapping(path = "/addStudent")
+    public StudentBean05 addStndt(@RequestBody StudentBean05 newStd)throws ClassNotFoundException, SQLException {
+        return stdSrvc.addStudent1(newStd);
     }
 
 

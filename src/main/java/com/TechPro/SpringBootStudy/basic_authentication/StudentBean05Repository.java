@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface StudentBean05Repository extends JpaRepository<StudentBean05,Long> {//repository'in ihtiyac duyacagı id ile data alma vs bazı methodları kullanmak içinextend edildi
 
 
-    Optional<StudentBean05> findStudentBean04ByEmail(String email);//e mail ile data bulan metod
+    Optional<StudentBean05> findStudentBean05ByEmail(String email);//e mail ile data bulan metod
 
 
 }
