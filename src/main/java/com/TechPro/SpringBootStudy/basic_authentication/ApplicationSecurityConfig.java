@@ -4,6 +4,7 @@ package com.TechPro.SpringBootStudy.basic_authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -14,6 +15,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration // Class'ı konfiguratiıoın olarak tanımlar
 @EnableWebSecurity // Tanımlı olduğu Class'ta from based olarak securty yerine configuration olanı kullanmamızı sağlar
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordConfig passwordConfig;
@@ -30,7 +32,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeHttpRequests()//Requestler için yetki sorgula
                 .antMatchers("/", "/index", "/css/*", "/js/*").permitAll()
-                // antMatchers() method parametresindeki url'lere izin verir
+                .antMatchers("/**").hasRole(ApplicationUserRoles.ADMIN.name())
                 .anyRequest() // her request için
                 .authenticated()
                 .and() // neye göre
@@ -42,10 +44,21 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     protected UserDetailsService userDetailsService() {
 
-        UserDetails user01 = User.builder().username("mehmet").password(passwordConfig.passwordEncoder().encode("1234")).roles("USER").build();
-        UserDetails user02 = User.builder().username("turkan").password(passwordConfig.passwordEncoder().encode("1234")).roles("USER").build();
-        UserDetails admin01 = User.builder().username("ayse").password(passwordConfig.passwordEncoder().encode("1234")).roles("ADMIN").build();
-        UserDetails admin02 = User.builder().username("eymen").password(passwordConfig.passwordEncoder().encode("1234")).roles("ADMIN").build();
-         return new InMemoryUserDetailsManager(user01, user02, admin01, admin02);
+        UserDetails admin = User
+                .builder()
+                .username("admin")
+                .password(passwordConfig.passwordEncoder()
+                        .encode("1234"))
+                .authorities(ApplicationUserRoles.ADMIN.izinler())
+                .build();
+        UserDetails user = User
+                .builder()
+                .username("user")
+                .password(passwordConfig.passwordEncoder()
+                        .encode("1234"))
+                .authorities(ApplicationUserRoles.USER.izinler())
+                .build();
+
+        return new InMemoryUserDetailsManager(admin, user );
     }
 }
